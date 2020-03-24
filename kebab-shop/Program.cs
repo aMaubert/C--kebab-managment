@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+ *    First program in C# lang
+ *    Cours Design  Patterns at ESGI
+ *
+ *     23/03/2020
+ *
+ *    Kebab Managment Program
+ */
+
+using System;
 using System.Collections.Generic;
 
 namespace kebab_shop
@@ -7,10 +16,10 @@ namespace kebab_shop
     {
         static void Main(string[] args)
         {
-            Ingredient ingredient = new Ingredient("tomate", true, false, 1);
-            Ingredient ingredient2 = new Ingredient("oignon", true, false, 1);
-            Ingredient ingredient3 = new Ingredient("moule", true, true, 1);
-            Ingredient ingredient4 = new Ingredient("Fromage", false, false, 1); 
+            Ingredient ingredient = new Ingredient("tomate", IngredientType.Tomate,true, false, 1);
+            Ingredient ingredient2 = new Ingredient("oignon", IngredientType.Oignon,true, false, 1);
+            Ingredient ingredient3 = new Ingredient("moule", IngredientType.Moule,true, true, 1);
+            Ingredient ingredient4 = new Ingredient("fromage", IngredientType.Fromage,false, false, 1); 
             Ingredient[] listIngredients =
             {
                 ingredient,
@@ -29,17 +38,26 @@ namespace kebab_shop
             };
             
             Kebab kebab = new Kebab(listIngredients, listSauces);
+            
+            Console.WriteLine("liste des ingredients du kebab : ");
+            kebab.DisplayIngredients();
             Console.WriteLine("le kebab est végetarien : " +  kebab.HaveVegetarianIngredients());
             Console.WriteLine("le kebab est pescétarien : " +  kebab.HavePescetarienIngredients());
             Console.WriteLine("liste des sauces du kebab : ");
             kebab.DisplaySauces();
+            Console.WriteLine();
+            
+            // on enlève les oignons
             kebab = kebab.SansOignons();
-            Console.WriteLine("liste des ingredients du kebab : ");
+            Console.WriteLine("liste des ingredients du kebab (Sans oignons) : ");
             kebab.DisplayIngredients();
+            Console.WriteLine();
 
+            // on met un supplément fromage
             kebab = kebab.SupplementFromage();
-            Console.WriteLine("liste des ingredients du kebab : ");
+            Console.WriteLine("liste des ingredients du kebab (Supplément fromage) : ");
             kebab.DisplayIngredients();
+            Console.WriteLine();
 
         }
     }
@@ -59,9 +77,9 @@ namespace kebab_shop
         public Kebab SupplementFromage()
         {
             var listIngredients =  new List<Ingredient>(this.Ingredients);
-            for( int i = 0;i < listIngredients.Count; i++)
+            for( int i = 0; i < listIngredients.Count; i++)
             {
-                if (listIngredients[i].Name.ToLower().Contains("fromage"))
+                if (listIngredients[i].Type == IngredientType.Fromage)
                 {
                     listIngredients[i].DoubleQuantity();
                 }
@@ -74,9 +92,9 @@ namespace kebab_shop
         public Kebab SansOignons()
         {
             var listIngredients =  new List<Ingredient>(this.Ingredients);
-            for( int i = 0;i < listIngredients.Count; i++)
+            for( int i = 0; i < listIngredients.Count; i++)
             {
-                if (listIngredients[i].Name.ToLower().Contains("oignon"))
+                if (listIngredients[i].Type == IngredientType.Oignon)
                 {
                     listIngredients.RemoveAt(i);
                     i--;
@@ -147,13 +165,16 @@ namespace kebab_shop
         private bool _isVegetarian;
         private bool _isPescetarien;
         private int _quantity;
+        private IngredientType _type;
 
-        public Ingredient(String name, bool isVegetarian, bool isPescetarien, int quantity)
+        public Ingredient(String name, IngredientType ingredientType, bool isVegetarian, bool isPescetarien, int quantity)
         {
             this.Name = name;
             this.IsVegetarian = isVegetarian;
             this.IsPescetarien = isPescetarien;
             this.Quantity = quantity;
+            this.Type = ingredientType;
+
         }
 
         public string Name
@@ -183,6 +204,12 @@ namespace kebab_shop
         {
             get => _quantity;
             set => _quantity = value;
+        }
+
+        public IngredientType Type
+        {
+            get => _type;
+            set => _type = value;
         }
 
         public override string ToString()
@@ -219,5 +246,16 @@ namespace kebab_shop
         {
             return "Sauce : { name : " + this.Name +" }";
         }
+    }
+
+
+    // I would like to make Ingredient type into an Enum
+    enum IngredientType
+    {
+        Fromage,
+        Salade,
+        Tomate,
+        Oignon,
+        Moule
     }
 }
