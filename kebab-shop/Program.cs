@@ -15,19 +15,33 @@ namespace kebab_shop
                 ingredient2,
                 ingredient3
             };
-            Kebab kebab = new Kebab(listIngredients);
+            
+            Sauce sauceBarbecue = new Sauce("Barbecue");
+            Sauce sauceAlgerian = new Sauce("Algerian");
+
+            Sauce[] listSauces =
+            {
+                sauceBarbecue,
+                sauceAlgerian
+            };
+            
+            Kebab kebab = new Kebab(listIngredients, listSauces);
             Console.WriteLine("le kebab est végetarien : " +  kebab.HaveVegetarianIngredients());
             Console.WriteLine("le kebab est pescétarien : " +  kebab.HavePescetarienIngredients());
+            Console.WriteLine("liste des sauces du kebab : ");
+            kebab.DisplaySauces();
         }
     }
 
     class Kebab
     {
         private Ingredient[] _ingredients;
+        private Sauce[] _sauces;
 
-        public Kebab(Ingredient[] ingredients)
+        public Kebab(Ingredient[] ingredients, Sauce[] sauces)
         {
             this.Ingredients = ingredients;
+            this.Sauces = sauces;
         }
 
         public bool HaveVegetarianIngredients()
@@ -53,11 +67,26 @@ namespace kebab_shop
             }
             return true;
         }
+
+
+        public void DisplaySauces()
+        {
+            foreach (var sauce in this.Sauces)
+            {
+                Console.WriteLine(sauce.ToString());
+            }
+        }
         
         public Ingredient[] Ingredients
         {
             get => _ingredients;
             set => _ingredients = value;
+        }
+        
+        public Sauce[] Sauces
+        {
+            get => _sauces;
+            set => _sauces = value;
         }
     }
 
@@ -95,6 +124,28 @@ namespace kebab_shop
                     _isPescetarien = value;   
                 }
             }
+        }
+        
+    }
+
+    class Sauce
+    {
+        private string _name;
+
+        public Sauce(string name)
+        {
+            this.Name = name;
+        }
+
+        public string Name
+        {
+            get => _name;
+            set => _name = value;
+        }
+
+        public override string ToString()
+        {
+            return "Sauce : { name : " + this.Name +" }";
         }
     }
 }
