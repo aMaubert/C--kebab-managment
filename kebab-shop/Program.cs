@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace kebab_shop
 {
@@ -6,14 +7,16 @@ namespace kebab_shop
     {
         static void Main(string[] args)
         {
-            Ingredient ingredient = new Ingredient("tomate", true, false);
-            Ingredient ingredient2 = new Ingredient("oignon", true, false);
-            Ingredient ingredient3 = new Ingredient("moule", true, true); 
+            Ingredient ingredient = new Ingredient("tomate", true, false, 1);
+            Ingredient ingredient2 = new Ingredient("oignon", true, false, 1);
+            Ingredient ingredient3 = new Ingredient("moule", true, true, 1);
+            Ingredient ingredient4 = new Ingredient("fromage", false, false, 1); 
             Ingredient[] listIngredients =
             {
                 ingredient,
                 ingredient2,
-                ingredient3
+                ingredient3,
+                ingredient4
             };
             
             Sauce sauceBarbecue = new Sauce("Barbecue");
@@ -30,6 +33,14 @@ namespace kebab_shop
             Console.WriteLine("le kebab est pescétarien : " +  kebab.HavePescetarienIngredients());
             Console.WriteLine("liste des sauces du kebab : ");
             kebab.DisplaySauces();
+            kebab = kebab.SansOignons();
+            Console.WriteLine("liste des ingredients du kebab : ");
+            kebab.DisplayIngredients();
+
+            kebab = kebab.SupplementFromage();
+            Console.WriteLine("liste des ingredients du kebab : ");
+            kebab.DisplayIngredients();
+
         }
     }
 
@@ -44,6 +55,38 @@ namespace kebab_shop
             this.Sauces = sauces;
         }
 
+
+        public Kebab SupplementFromage()
+        {
+            var listIngredients =  new List<Ingredient>(this.Ingredients);
+            for( int i = 0;i < listIngredients.Count; i++)
+            {
+                if (listIngredients[i].Name.Contains("fromage"))
+                {
+                    listIngredients[i].DoubleQuantity();
+                }
+            }
+
+            this.Ingredients = listIngredients.ToArray();
+            return this;
+        }
+        
+        public Kebab SansOignons()
+        {
+            var listIngredients =  new List<Ingredient>(this.Ingredients);
+            for( int i = 0;i < listIngredients.Count; i++)
+            {
+                if (listIngredients[i].Name.Contains("oignon"))
+                {
+                    listIngredients.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            this.Ingredients = listIngredients.ToArray();
+            return this;
+        }
+
         public bool HaveVegetarianIngredients()
         {
             foreach (Ingredient eachIngredient in this.Ingredients)
@@ -55,7 +98,7 @@ namespace kebab_shop
             }
             return true;
         }
-        
+
         public bool HavePescetarienIngredients()
         {
             foreach (Ingredient eachIngredient in this.Ingredients)
@@ -77,6 +120,14 @@ namespace kebab_shop
             }
         }
         
+        public void DisplayIngredients()
+        {
+            foreach (var ingredient in this.Ingredients)
+            {
+                Console.WriteLine(ingredient.ToString());
+            }
+        }
+        
         public Ingredient[] Ingredients
         {
             get => _ingredients;
@@ -95,12 +146,14 @@ namespace kebab_shop
         private string _name;
         private bool _isVegetarian;
         private bool _isPescetarien;
+        private int _quantity;
 
-        public Ingredient(String name, bool isVegetarian, bool isPescetarien)
+        public Ingredient(String name, bool isVegetarian, bool isPescetarien, int quantity)
         {
             this.Name = name;
             this.IsVegetarian = isVegetarian;
             this.IsPescetarien = isPescetarien;
+            this.Quantity = quantity;
         }
 
         public string Name
@@ -125,7 +178,26 @@ namespace kebab_shop
                 }
             }
         }
-        
+
+        public int Quantity
+        {
+            get => _quantity;
+            set => _quantity = value;
+        }
+
+        public override string ToString()
+        {
+            return "Ingredient: { name : " + this.Name +
+                                ", isVegetarian: " + this.IsVegetarian +
+                                ", isPescetarien : " + this.IsPescetarien +
+                                ", quantity : " + this.Quantity +
+                   " }" ;
+        }
+
+        public void DoubleQuantity()
+        {
+            this.Quantity *= 2;
+        }
     }
 
     class Sauce
