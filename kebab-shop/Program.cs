@@ -10,7 +10,7 @@ namespace kebab_shop
             Ingredient ingredient = new Ingredient("tomate", true, false, 1);
             Ingredient ingredient2 = new Ingredient("oignon", true, false, 1);
             Ingredient ingredient3 = new Ingredient("moule", true, true, 1);
-            Ingredient ingredient4 = new Ingredient("fromage", false, false, 1); 
+            Ingredient ingredient4 = new Ingredient("Fromage", false, false, 1); 
             Ingredient[] listIngredients =
             {
                 ingredient,
@@ -61,7 +61,7 @@ namespace kebab_shop
             var listIngredients =  new List<Ingredient>(this.Ingredients);
             for( int i = 0;i < listIngredients.Count; i++)
             {
-                if (listIngredients[i].Name.Contains("fromage"))
+                if (listIngredients[i].Name.ToLower().Contains("fromage"))
                 {
                     listIngredients[i].DoubleQuantity();
                 }
@@ -76,7 +76,7 @@ namespace kebab_shop
             var listIngredients =  new List<Ingredient>(this.Ingredients);
             for( int i = 0;i < listIngredients.Count; i++)
             {
-                if (listIngredients[i].Name.Contains("oignon"))
+                if (listIngredients[i].Name.ToLower().Contains("oignon"))
                 {
                     listIngredients.RemoveAt(i);
                     i--;
